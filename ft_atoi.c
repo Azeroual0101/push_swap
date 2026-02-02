@@ -6,11 +6,11 @@
 /*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 20:16:43 by abdazero          #+#    #+#             */
-/*   Updated: 2025/11/01 18:06:38 by abdazero         ###   ########.fr       */
+/*   Updated: 2026/02/02 00:40:45 by abdazero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "push_swap.h"
 
 static	int	ft_isspace(int c)
 {

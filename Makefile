@@ -1,24 +1,37 @@
-NAME = push_swap
+NAME	= push_swap.a
 
-CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CC		= cc
+CFLAGS	= -Wall -Wextra -Werror
+AR		= ar rcs
+RM		= rm -f
 
-SRCS = srcs/main.c \
-       srcs/parsing/parse_args.c \
-       srcs/parsing/validate_args.c \
-       srcs/utils/utils.c
 
-OBJS = $(SRCS:.c=.o)
+SRCS	= parse_args.c \
+		  utils.c \
+		  ft_atoi.c \
+		  ft_split.c
+
+OBJS	= $(SRCS:.c=.o)
+
+
+HEADER	= push_swap.h
 
 all: $(NAME)
 
+
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+	$(AR) $(NAME) $(OBJS)
+
+
+%.o: %.c $(HEADER)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJS)
+	$(RM) $(OBJS)
 
 fclean: clean
-	rm -f $(NAME)
+	$(RM) $(NAME)
 
 re: fclean all
+
+.PHONY: all clean fclean re

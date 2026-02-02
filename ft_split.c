@@ -6,11 +6,11 @@
 /*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 11:04:06 by abdazero          #+#    #+#             */
-/*   Updated: 2025/10/30 12:09:57 by abdazero         ###   ########.fr       */
+/*   Updated: 2026/02/02 00:40:40 by abdazero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "push_swap.h"
 
 static	int	cal_len(char const *s, char c)
 {
