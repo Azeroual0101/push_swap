@@ -1,4 +1,16 @@
-#include "push_swap.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/02 23:03:30 by abdazero          #+#    #+#             */
+/*   Updated: 2026/02/02 23:03:32 by abdazero         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../push_swap.h"
 
 void    free_split(char **tab)
 {
@@ -46,7 +58,6 @@ long ft_atol(char *morc)
         i++;
     }
     return (res * signe);
-    
 }
 
 int is_nbr(char *morc)
@@ -79,7 +90,7 @@ int is_nbr_double(int nbr, t_node *stack)
     }
     return (1);
 }
-int ajout_stack(int nbr,t_node **stack)
+int add_to_stack(int nbr,t_node **stack)
 {
     t_node *node;
     t_node *last;

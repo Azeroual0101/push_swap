@@ -1,4 +1,16 @@
-#include "push_swap.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_args.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/02 23:03:22 by abdazero          #+#    #+#             */
+/*   Updated: 2026/02/02 23:03:26 by abdazero         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../push_swap.h"
 
 t_node *pars_argmnts(int argc,char **argv)
 {
@@ -55,7 +67,7 @@ t_node *handle_morceaux(char **morceaux,t_node *stack)
             free_stack(stack);
             return (NULL);
         }
-        if (!ajout_stack(nbr,&stack))
+        if (!add_to_stack(nbr,&stack))
         {
             free_stack(stack);
             return (NULL);
