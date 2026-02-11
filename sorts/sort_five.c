@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   sort_five.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/03 13:18:01 by abdazero          #+#    #+#             */
-/*   Updated: 2026/02/06 00:26:40 by marvin           ###   ########.fr       */
+/*   Created: 2026/02/10 23:09:21 by abdazero          #+#    #+#             */
+/*   Updated: 2026/02/11 15:17:08 by abdazero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../push_swap.h"
-static int  ft_size(t_node  **a)
+
+int  ft_size(t_node  **a)
 {
     t_node *curr;
     int size;

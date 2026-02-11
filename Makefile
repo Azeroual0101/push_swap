@@ -21,7 +21,11 @@ $(OPERATIONS_DIR)rotate.c \
 $(OPERATIONS_DIR)push.c \
 $(OPERATIONS_DIR)swap.c \
 $(SORTS_DIR)sort_three.c \
-$(SORTS_DIR)sort_five.c
+$(SORTS_DIR)sort_five.c \
+$(SORTS_DIR)utils_sort.c \
+$(SORTS_DIR)radix_sort.c
+
+
 
 OBJS = $(SRCS:.c=.o)
 HEADER = push_swap.h
