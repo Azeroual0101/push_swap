@@ -6,13 +6,28 @@
 /*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 23:03:30 by abdazero          #+#    #+#             */
-/*   Updated: 2026/02/02 23:03:32 by abdazero         ###   ########.fr       */
+/*   Updated: 2026/02/18 17:04:27 by abdazero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../push_swap.h"
 
-void    free_split(char **tab)
+int  ft_size(t_node  **a)
+{
+    t_node *curr;
+    int size;
+
+    size = 0;
+    curr = *a;
+    while (curr)
+    {
+        size++;
+        curr = curr->next;
+    }
+    return(size);
+}
+
+void    ft_free_split(char **tab)
 {
     int i;
     if(!tab)
@@ -25,7 +40,7 @@ void    free_split(char **tab)
     }
     free(tab);
 }
-void    free_stack(t_node *stack)
+void    ft_free_stack(t_node *stack)
 {
     t_node *temp;
     while(stack != NULL)
@@ -93,22 +108,12 @@ int is_nbr_double(int nbr, t_node *stack)
 int add_to_stack(int nbr,t_node **stack)
 {
     t_node *node;
-    t_node *last;
 
     node = malloc(sizeof(t_node));
     if(!node)
         return (0);
     node->value = nbr;
-    node->next = NULL;
-
-    if(*stack == NULL)
-    {
-        *stack = node;
-        return (1);
-    }
-    last= *stack;
-    while (last->next != NULL)
-        last = last->next;
-    last->next = node;
+    node->next = *stack;
+    *stack = node;
     return (1);
 }

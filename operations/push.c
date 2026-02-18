@@ -6,7 +6,7 @@
 /*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 23:03:39 by abdazero          #+#    #+#             */
-/*   Updated: 2026/02/02 23:03:41 by abdazero         ###   ########.fr       */
+/*   Updated: 2026/02/16 18:36:36 by abdazero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void ft_pb(t_node **a, t_node **b)
     *a = (*a) -> next;
     temp -> next = *b;
     *b = temp;
+    write(1,"pb\n",3);
 }
 void ft_pa(t_node **a, t_node **b)
 {
@@ -33,5 +34,6 @@ void ft_pa(t_node **a, t_node **b)
     *b = (*b) -> next;
     temp -> next = *a;
     *a = temp;
+    write(1,"pa\n",3);
 }
 

@@ -18,8 +18,8 @@ typedef struct s_node
 /* ************************************************************************** */
 
 t_node	*pars_argmnts(int argc, char **argv);
-t_node	*handle_argv(char *argv);
-t_node	*handle_morceaux(char **morceaux, t_node *stack);
+t_node *handle_argv(char *argv,t_node *orgstack);
+t_node *handle_morceaux(char **morceaux, t_node *stack, t_node *orgstack);
 int		is_valide(char *morc, int *nbr);
 
 /* ************************************************************************** */
@@ -91,6 +91,8 @@ t_node  *tri_stack(t_node **a);
 int     ft_max_bits(int size);
 t_node  *radix_sort(t_node **a);
 int     ft_size(t_node  **a);
+void    sort_four(t_node **a);
+void    sort_two(t_node **a);
 
 
 #endif

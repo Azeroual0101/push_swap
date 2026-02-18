@@ -1,52 +1,61 @@
 #include "push_swap.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-t_node *ajout(int  nbr, t_node **stack)
+// Fonction pour afficher la pile (pour debug)
+void print_stack(t_node *stack)
 {
-    t_node     *last;
-    t_node     *node;
-    node = malloc(sizeof(t_node));
-
-    node->value = nbr;
-    node->next = NULL;
-
-    if(*stack == NULL)
+    while (stack)
     {
-          *stack = node;
-          return (*stack);
+        printf("%d ", stack->value);
+        stack = stack->next;
     }
-    last = *stack;
-    while (last->next != NULL)
-          last = last->next;
-     last->next = node;
-     
-     return (*stack);
-    
 }
-int   main()
+
+int main(int argc, char **argv)
 {
-     int A[50] = {
-        45, 23, 12, 8, 37, 29, 41, 15, 3, 33,
-        19, 27, 5, 49, 10, 21, 42, 31, 7, 25,
-        14, 38, 17, 1, 48, 35, 9, 44, 20, 2,
-        40, 13, 47, 30, 6, 36, 22, 4, 46, 26,
-        11, 39, 16, 0, 43, 28, 18, 32, 24, 34
-    };
-     t_node *a;
-     t_node *curent;
-     a = NULL;
-     int i = 0;
-     while (i < 50)
-     {
-          a = ajout(A[i],&a);
-          i++;
-     }
-     radix_sort(&a);
-     curent = a;
-     printf("Affichage de a apres sort\n");
-     while (curent != NULL)
-     {
-          printf("index = %d - Value = %d\n ",curent->index ,curent->value);
-          curent= curent->next;
-     }
-     return(0);
+    t_node *a = NULL;
+    t_node *b = NULL;
+    int size;
+
+    // ===== PARSING =====
+    a = pars_argmnts(argc, argv);
+    
+    // Si erreur de parsing
+    if (a == NULL)
+    {
+        if (argc > 1)  // Évite d'afficher pour "aucun argument"
+            printf("Error\n");
+        return (1);
+    }
+    
+    // ===== TRI =====
+    size = ft_size(&a);
+    
+    if (size <= 1)
+    {
+        // Déjà trié, rien à faire
+    }
+    else if (size == 2)
+        sort_two(&a);
+    else if (size == 3)
+        sort_three(&a);
+    else if (size == 4)
+        sort_four(&a);
+    else if (size == 5)
+        sort_five(&a);
+    else
+    {
+        radix_sort(&a);
+    }
+    
+    // ===== AFFICHAGE POUR LE TESTEUR =====
+    // Le script tester.sh attend la liste des opérations
+    // ou rien si déjà trié
+    
+    // ===== LIBÉRATION =====
+    ft_free_stack(a);
+    ft_free_stack(b);
+    
+    return (0);
 }

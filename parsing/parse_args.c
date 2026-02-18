@@ -6,7 +6,7 @@
 /*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 23:03:22 by abdazero          #+#    #+#             */
-/*   Updated: 2026/02/02 23:03:26 by abdazero         ###   ########.fr       */
+/*   Updated: 2026/02/18 17:05:55 by abdazero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ t_node *pars_argmnts(int argc,char **argv)
     i = 1;
     while (i < argc)
     {
-        temp = handle_argv(argv[i]);
+        temp = handle_argv(argv[i],stack);
         if(!temp)
         {
-            free_stack(stack);
+            ft_free_stack(stack);
             return (NULL);
         }
         stack =  merge_stack(stack, temp);
@@ -36,7 +36,7 @@ t_node *pars_argmnts(int argc,char **argv)
     return (stack);
 }
 
-t_node *handle_argv(char *argv)
+t_node *handle_argv(char *argv,t_node *orgstack)
 {
     char **morceaux;
     t_node *stack;
@@ -44,12 +44,12 @@ t_node *handle_argv(char *argv)
     morceaux = ft_split(argv,' ');
     if (!morceaux)
         return (NULL);
-    stack = handle_morceaux(morceaux,NULL);
-    free_split(morceaux);
+    stack = handle_morceaux(morceaux,NULL,orgstack);
+    ft_free_split(morceaux);
     return (stack);
 }
 
-t_node *handle_morceaux(char **morceaux,t_node *stack)
+t_node *handle_morceaux(char **morceaux, t_node *stack, t_node *orgstack)
 {
     int i;
     int nbr;
@@ -59,17 +59,17 @@ t_node *handle_morceaux(char **morceaux,t_node *stack)
     {
         if(!is_valide(morceaux[i], &nbr))
         {
-            free_stack(stack);
+            ft_free_stack(stack);
             return (NULL);
         }
-        if(!is_nbr_double(nbr,stack))
+        if(!is_nbr_double(nbr, orgstack) || (stack && !is_nbr_double(nbr, stack)))
         {
-            free_stack(stack);
+            ft_free_stack(stack);
             return (NULL);
         }
-        if (!add_to_stack(nbr,&stack))
+        if (!add_to_stack(nbr, &stack))
         {
-            free_stack(stack);
+            ft_free_stack(stack);
             return (NULL);
         }
         i++;

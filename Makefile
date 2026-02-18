@@ -1,10 +1,10 @@
 NAME = push_swap.a
+EXEC = push_swap
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 AR = ar rcs
 RM = rm -f
-
 
 PARSING_DIR = parsing/
 OPERATIONS_DIR = operations/
@@ -23,9 +23,9 @@ $(OPERATIONS_DIR)swap.c \
 $(SORTS_DIR)sort_three.c \
 $(SORTS_DIR)sort_five.c \
 $(SORTS_DIR)utils_sort.c \
-$(SORTS_DIR)radix_sort.c
-
-
+$(SORTS_DIR)radix_sort.c \
+$(SORTS_DIR)sort_four.c \
+$(SORTS_DIR)sort_two.c
 
 OBJS = $(SRCS:.c=.o)
 HEADER = push_swap.h
@@ -38,13 +38,24 @@ $(NAME): $(OBJS)
 %.o: %.c $(HEADER)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+test: $(NAME)
+	$(CC) $(CFLAGS) main.c $(NAME) -o $(EXEC)
+	@echo "✅ $(EXEC) créé"
+
+run: test
+	@echo "\n🔍 Test avec: 5 2 8 1 9"
+	./$(EXEC) 5 2 8 1 9
+
 clean:
 	$(RM) $(OBJS)
 	clear
 
 fclean: clean
-	$(RM) $(NAME)
+	$(RM) $(NAME) $(EXEC)
 
 re: fclean all
 
-.PHONY: all clean fclean re
+norm:
+	norminette $(SRCS) $(HEADER)
+
+.PHONY: all clean fclean re test run norm

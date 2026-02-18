@@ -6,26 +6,12 @@
 /*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 23:09:21 by abdazero          #+#    #+#             */
-/*   Updated: 2026/02/11 15:17:08 by abdazero         ###   ########.fr       */
+/*   Updated: 2026/02/18 16:15:19 by abdazero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../push_swap.h"
 
-int  ft_size(t_node  **a)
-{
-    t_node *curr;
-    int size;
-
-    size = 0;
-    curr = *a;
-    while (curr)
-    {
-        size++;
-        curr = curr->next;
-    }
-    return(size);
-}
 static void find_two_smallest(t_node *a, int *min1, int *min2)
 {
     t_node *curr;
