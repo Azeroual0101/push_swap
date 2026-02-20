@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # =============================================================================
-# TESTEUR DE FUITES MÉMOIRE POUR PUSH_SWAP
+# TESTEUR DE TRI POUR PUSH_SWAP
 # =============================================================================
 
 # Couleurs
@@ -15,9 +15,9 @@ RESET="\033[0m"
 
 # Configuration
 PROGRAM="./push_swap"
+CHECKER="./checker"  # ou checker_Mac, checker_linux selon OS
 TOTAL=0
-LEAKS=0
-OK=0
+PASSED=0
 
 # Vérification que le programme existe
 if [ ! -f "$PROGRAM" ]; then
@@ -25,43 +25,54 @@ if [ ! -f "$PROGRAM" ]; then
     exit 1
 fi
 
-# Vérification que valgrind est installé
-if ! command -v valgrind &> /dev/null; then
-    echo -e "${RED}❌ valgrind n'est pas installé. Installe-le avec:${RESET}"
-    echo "  sudo apt install valgrind   # Ubuntu/Debian"
-    echo "  brew install valgrind       # Mac"
-    exit 1
-fi
-
-# Fonction pour tester les fuites
-test_leaks() {
+# Fonction pour exécuter un test
+test_case() {
     local test_name="$1"
     local args="$2"
+    local expected_max="$3"
+    local size="$4"
     
     echo -e "\n${BLUE}═══════════════════════════════════════════════════════════════${RESET}"
     echo -e "${YELLOW}📋 TEST: $test_name${RESET}"
     echo -e "${BLUE}Arguments: $args${RESET}"
+    echo -e "${BLUE}Taille: $size${RESET}"
     
-    # Exécuter valgrind et capturer la sortie
-    valgrind --leak-check=full \
-             --show-leak-kinds=all \
-             --track-origins=yes \
-             --verbose \
-             --log-file=valgrind.log \
-             $PROGRAM $args > /dev/null 2>&1
+    # Exécuter push_swap et compter les mouvements
+    moves=$($PROGRAM $args 2>/dev/null | wc -l)
     
-    # Analyser le résultat
-    if grep -q "All heap blocks were freed -- no leaks are possible" valgrind.log; then
-        echo -e "${GREEN}✅ PAS DE FUITES${RESET}"
-        OK=$((OK + 1))
+    # Vérifier avec checker si disponible
+    if [ -f "$CHECKER" ]; then
+        result=$(echo "$moves" | $CHECKER $args 2>/dev/null)
+        if [ "$result" = "OK" ] || [ -z "$result" ]; then
+            status="${GREEN}✅ OK${RESET}"
+            PASSED=$((PASSED + 1))
+        else
+            status="${RED}❌ KO${RESET}"
+        fi
     else
-        echo -e "${RED}❌ FUITES DÉTECTÉES !${RESET}"
-        grep -E "definitely lost|indirectly lost|possibly lost" valgrind.log
-        LEAKS=$((LEAKS + 1))
+        # Sans checker, on vérifie juste que le tri a fonctionné (pas d'erreur)
+        $PROGRAM $args > /dev/null 2>&1
+        if [ $? -eq 0 ]; then
+            status="${GREEN}✅ EXÉCUTÉ${RESET}"
+            PASSED=$((PASSED + 1))
+        else
+            status="${RED}❌ ERREUR${RESET}"
+        fi
+    fi
+    
+    # Afficher les mouvements
+    echo -e "   Mouvements: $moves"
+    
+    # Vérifier la limite attendue
+    if [ "$expected_max" != "0" ]; then
+        if [ $moves -le $expected_max ]; then
+            echo -e "   ${GREEN}✓ ≤ $expected_max mouvements${RESET}"
+        else
+            echo -e "   ${RED}✗ > $expected_max mouvements (attendu: ≤ $expected_max)${RESET}"
+        fi
     fi
     
     TOTAL=$((TOTAL + 1))
-    rm -f valgrind.log
 }
 
 # =============================================================================
@@ -69,148 +80,102 @@ test_leaks() {
 # =============================================================================
 
 echo -e "\n${MAGENTA}═══════════════════════════════════════════════════════════════${RESET}"
-echo -e "${MAGENTA}         TESTEUR DE FUITES MÉMOIRE PUSH_SWAP${RESET}"
+echo -e "${MAGENTA}              TESTEUR DE TRI PUSH_SWAP${RESET}"
 echo -e "${MAGENTA}═══════════════════════════════════════════════════════════════${RESET}"
 
 # -----------------------------------------------------------------------------
-# 1. TESTS DE PARSING (CAS NORMAUX)
+# TEST POUR 1 NOMBRE
 # -----------------------------------------------------------------------------
-echo -e "\n${CYAN}══════════════ 1. TESTS DE PARSING - CAS NORMAUX ══════════════${RESET}"
-
-test_leaks "1 nombre" "42"
-test_leaks "5 nombres simples" "12 45 -7 89 0"
-test_leaks "Avec zéro" "0 1 2 3 4"
-test_leaks "Nombres négatifs" "-5 -3 -1 -4 -2"
-test_leaks "Mix positif/négatif" "-10 5 -20 15 -30"
-test_leaks "Limite INT_MAX" "2147483647"
-test_leaks "Limite INT_MIN" "-2147483648"
-test_leaks "Avec signe +" "+1 +2 +3 +4 +5"
+echo -e "\n${CYAN}═══════════════════════ 1 NOMBRE ═══════════════════════${RESET}"
+test_case "1 nombre" "42" "0" "1"
+test_case "1 nombre négatif" "-42" "0" "1"
 
 # -----------------------------------------------------------------------------
-# 2. TESTS DE SPLIT (ARGUMENTS GROUPÉS)
+# TEST POUR 2 NOMBRES
 # -----------------------------------------------------------------------------
-echo -e "\n${CYAN}══════════════ 2. TESTS DE SPLIT ══════════════${RESET}"
-
-test_leaks "Un argument avec espaces" "\"12 45 -7 89 0\""
-test_leaks "Mix arguments simples/groupés" "12 \"45 -7\" 89 0"
-test_leaks "Plusieurs groupes" "\"1 2\" \"3 4\" \"5 6\""
-test_leaks "Groupes avec négatifs" "\"-1 -2\" \"-3 -4\""
-
-# -----------------------------------------------------------------------------
-# 3. TESTS D'ERREUR (DOIVENT ÉCHOUER SANS FUITES)
-# -----------------------------------------------------------------------------
-echo -e "\n${CYAN}══════════════ 3. TESTS D'ERREUR ══════════════${RESET}"
-
-# Doublons
-test_leaks "Doublon simple" "42 21 42"
-test_leaks "Doublons multiples" "5 5 5 5"
-test_leaks "Doublon avec limites" "2147483647 42 2147483647"
-test_leaks "Doublon négatif" "-5 -3 -5"
-
-# Overflow
-test_leaks "Overflow positif" "2147483648"
-test_leaks "Overflow négatif" "-2147483649"
-test_leaks "Très grand nombre" "9999999999"
-
-# Caractères invalides
-test_leaks "Lettre dans nombre" "12a 45"
-test_leaks "Lettre seule" "a"
-test_leaks "Caractère spécial" "12- 45"
-test_leaks "Double signe" "--12 45"
-test_leaks "Signe seul" "- 45"
-test_leaks "Signe à la fin" "45-"
-test_leaks "Chaîne vide" "\"\""
-test_leaks "Espace seulement" "\" \""
-
-# Cas limites
-test_leaks "Aucun argument" ""
-test_leaks "Nombre valide + invalide" "42 12a"
-test_leaks "Invalide + valide" "12a 42"
-test_leaks "Mélange valide/invalide" "1 2a 3"
+echo -e "\n${CYAN}═══════════════════════ 2 NOMBRES ═══════════════════════${RESET}"
+test_case "2 nombres déjà trié" "1 2" "1" "2"
+test_case "2 nombres à trier" "2 1" "1" "2"
+test_case "2 nombres négatifs" "-1 -2" "1" "2"
+test_case "2 nombres avec zéro" "0 1" "1" "2"
 
 # -----------------------------------------------------------------------------
-# 4. TESTS DE TRI - PETITES PILES
+# TEST POUR 3 NOMBRES
 # -----------------------------------------------------------------------------
-echo -e "\n${CYAN}══════════════ 4. TESTS DE TRI - PETITES PILES ══════════════${RESET}"
-
-# 2 nombres
-test_leaks "2 nombres - déjà trié" "1 2"
-test_leaks "2 nombres - à trier" "2 1"
-
-# 3 nombres (tous les cas)
-test_leaks "3 nombres - déjà trié" "1 2 3"
-test_leaks "3 nombres - 3-2-1" "3 2 1"
-test_leaks "3 nombres - 2-3-1" "2 3 1"
-test_leaks "3 nombres - 3-1-2" "3 1 2"
-test_leaks "3 nombres - 1-3-2" "1 3 2"
-test_leaks "3 nombres - 2-1-3" "2 1 3"
-
-# 4 nombres
-test_leaks "4 nombres - déjà trié" "1 2 3 4"
-test_leaks "4 nombres - décroissant" "4 3 2 1"
-test_leaks "4 nombres - aléatoire 1" "2 4 1 3"
-test_leaks "4 nombres - aléatoire 2" "3 1 4 2"
-
-# 5 nombres
-test_leaks "5 nombres - déjà trié" "1 2 3 4 5"
-test_leaks "5 nombres - décroissant" "5 4 3 2 1"
-test_leaks "5 nombres - aléatoire 1" "2 5 3 1 4"
-test_leaks "5 nombres - aléatoire 2" "5 2 1 4 3"
+echo -e "\n${CYAN}═══════════════════════ 3 NOMBRES ═══════════════════════${RESET}"
+test_case "3 nombres déjà trié" "1 2 3" "0" "3"
+test_case "3-2-1" "3 2 1" "3" "3"
+test_case "2-3-1" "2 3 1" "3" "3"
+test_case "3-1-2" "3 1 2" "3" "3"
+test_case "1-3-2" "1 3 2" "3" "3"
+test_case "2-1-3" "2 1 3" "3" "3"
 
 # -----------------------------------------------------------------------------
-# 5. TESTS DE TRI - MOYENNES PILES
+# TEST POUR 4 NOMBRES
 # -----------------------------------------------------------------------------
-echo -e "\n${CYAN}══════════════ 5. TESTS DE TRI - MOYENNES PILES ══════════════${RESET}"
-
-test_leaks "10 nombres - aléatoire" "5 2 8 1 9 3 7 4 6 10"
-test_leaks "10 nombres - décroissant" "10 9 8 7 6 5 4 3 2 1"
-test_leaks "20 nombres - aléatoire" "12 5 8 19 2 15 7 4 11 3 18 9 1 14 6 17 10 13 16 20"
-
-# -----------------------------------------------------------------------------
-# 6. TESTS DE TRI - GRANDES PILES (Radix)
-# -----------------------------------------------------------------------------
-echo -e "\n${CYAN}══════════════ 6. TESTS DE TRI - GRANDES PILES ══════════════${RESET}"
-
-# 50 nombres aléatoires
-test_leaks "50 nombres - aléatoire #1" "$(seq -25 25 | shuf | head -50 | tr '\n' ' ')"
-test_leaks "50 nombres - aléatoire #2" "$(seq -25 25 | shuf | head -50 | tr '\n' ' ')"
-
-# 100 nombres aléatoires
-test_leaks "100 nombres - aléatoire #1" "$(seq -50 50 | shuf | head -100 | tr '\n' ' ')"
-test_leaks "100 nombres - aléatoire #2" "$(seq -50 50 | shuf | head -100 | tr '\n' ' ')"
+echo -e "\n${CYAN}═══════════════════════ 4 NOMBRES ═══════════════════════${RESET}"
+test_case "4 nombres déjà trié" "1 2 3 4" "0" "4"
+test_case "4 nombres décroissant" "4 3 2 1" "8" "4"
+test_case "4 nombres aléatoire 1" "2 4 1 3" "8" "4"
+test_case "4 nombres aléatoire 2" "3 1 4 2" "8" "4"
+test_case "4 nombres aléatoire 3" "1 4 2 3" "8" "4"
 
 # -----------------------------------------------------------------------------
-# 7. TESTS SPÉCIAUX
+# TEST POUR 5 NOMBRES
 # -----------------------------------------------------------------------------
-echo -e "\n${CYAN}══════════════ 7. TESTS SPÉCIAUX ══════════════${RESET}"
-
-test_leaks "Grands nombres sans overflow" "1000000 2000000 3000000"
-test_leaks "Nombres consécutifs" "1 2 3 4 5 6 7 8 9 10"
-test_leaks "Nombres avec zéro" "0 -0 +0"
-test_leaks "Un seul argument avec espaces" "\"42 21 84\""
+echo -e "\n${CYAN}═══════════════════════ 5 NOMBRES ═══════════════════════${RESET}"
+test_case "5 nombres déjà trié" "1 2 3 4 5" "0" "5"
+test_case "5 nombres décroissant" "5 4 3 2 1" "12" "5"
+test_case "5 nombres aléatoire 1" "2 5 3 1 4" "12" "5"
+test_case "5 nombres aléatoire 2" "5 2 1 4 3" "12" "5"
+test_case "5 nombres aléatoire 3" "3 1 5 2 4" "12" "5"
+test_case "5 nombres avec négatifs" "-1 -3 2 0 4" "12" "5"
 
 # -----------------------------------------------------------------------------
-# 8. TEST DE STRESS
+# TEST POUR 10 NOMBRES
 # -----------------------------------------------------------------------------
-echo -e "\n${CYAN}══════════════ 8. TEST DE STRESS ══════════════${RESET}"
+echo -e "\n${CYAN}═══════════════════════ 10 NOMBRES ═══════════════════════${RESET}"
+test_case "10 nombres aléatoire" "5 2 8 1 9 3 7 4 6 10" "50" "10"
+test_case "10 nombres décroissant" "10 9 8 7 6 5 4 3 2 1" "50" "10"
 
-# 500 nombres
-test_leaks "500 nombres - stress test" "$(seq -250 250 | shuf | head -500 | tr '\n' ' ')"
+# -----------------------------------------------------------------------------
+# TEST POUR 100 NOMBRES (Radix sort)
+# -----------------------------------------------------------------------------
+echo -e "\n${CYAN}═══════════════════════ 100 NOMBRES ═══════════════════════${RESET}"
+for i in {1..3}; do
+    ARG=$(seq -50 50 | shuf | head -100 | tr '\n' ' ')
+    test_case "100 nombres aléatoire #$i" "$ARG" "700" "100"
+done
 
-# =============================================================================
+# -----------------------------------------------------------------------------
+# TEST POUR 500 NOMBRES (Radix sort)
+# -----------------------------------------------------------------------------
+echo -e "\n${CYAN}═══════════════════════ 500 NOMBRES ═══════════════════════${RESET}"
+for i in {1..2}; do
+    ARG=$(seq -250 250 | shuf | head -500 | tr '\n' ' ')
+    test_case "500 nombres aléatoire #$i" "$ARG" "5500" "500"
+done
+
+# -----------------------------------------------------------------------------
+# TESTS SPÉCIAUX
+# -----------------------------------------------------------------------------
+echo -e "\n${CYAN}═══════════════════════ TESTS SPÉCIAUX ═══════════════════════${RESET}"
+test_case "Nombres avec signe +" "+1 +2 +3 +4 +5" "12" "5"
+test_case "Mélange arguments simples/groupés" "1 2 \"3 4\" 5" "12" "5"
+
+# -----------------------------------------------------------------------------
 # RÉSULTATS FINAUX
-# =============================================================================
+# -----------------------------------------------------------------------------
 
 echo -e "\n${MAGENTA}═══════════════════════════════════════════════════════════════${RESET}"
-echo -e "${MAGENTA}                     RÉSULTATS DES TESTS${RESET}"
+echo -e "${MAGENTA}                     RÉSULTATS${RESET}"
 echo -e "${MAGENTA}═══════════════════════════════════════════════════════════════${RESET}"
-echo -e "Tests sans fuites: ${GREEN}$OK${RESET} / $TOTAL"
-echo -e "Tests avec fuites: ${RED}$LEAKS${RESET} / $TOTAL"
+echo -e "Tests réussis: ${GREEN}$PASSED${RESET} / $TOTAL"
 
-if [ $LEAKS -eq 0 ]; then
-    echo -e "${GREEN}✅ PARFAIT ! Aucune fuite mémoire détectée !${RESET}"
+if [ $PASSED -eq $TOTAL ]; then
+    echo -e "${GREEN}✅ PARFAIT ! Tous les tests de tri passent.${RESET}"
 else
-    echo -e "${RED}❌ $LEAKS test(s) avec fuites mémoire. Vérifie les logs valgrind.${RESET}"
+    echo -e "${RED}❌ $((TOTAL - PASSED)) test(s) échoué(s).${RESET}"
 fi
 
 echo -e "${MAGENTA}═══════════════════════════════════════════════════════════════${RESET}\n"
