@@ -25,7 +25,9 @@ $(SORTS_DIR)sort_five.c \
 $(SORTS_DIR)utils_sort.c \
 $(SORTS_DIR)radix_sort.c \
 $(SORTS_DIR)sort_four.c \
-$(SORTS_DIR)sort_two.c
+$(SORTS_DIR)sort_two.c \
+$(SORTS_DIR)sort_med.c 
+
 
 OBJS = $(SRCS:.c=.o)
 HEADER = push_swap.h
