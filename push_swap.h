@@ -87,12 +87,13 @@ void    sort_five(t_node **a);
 void    sort_tab(int *tab, int size);
 int     is_sorted(t_node *stack);
 int     *index_stack(t_node **a);
-t_node  *tri_stack(t_node **a);
+t_node  *tri_stack(t_node **a, int size);
 int     ft_max_bits(int size);
 t_node  *radix_sort(t_node **a);
 int     ft_size(t_node  **a);
 void    sort_four(t_node **a);
 void    sort_two(t_node **a);
-
+void    find_k_smallest(t_node *stack, int *result, int k);
+void    sort_med(t_node **a);
 
 #endif

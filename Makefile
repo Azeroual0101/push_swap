@@ -14,7 +14,8 @@ SRCS = \
 $(PARSING_DIR)ft_atoi.c \
 $(PARSING_DIR)ft_split.c \
 $(PARSING_DIR)parse_args.c \
-$(PARSING_DIR)utils.c \
+$(PARSING_DIR)utils_1.c \
+$(PARSING_DIR)utils_2.c \
 $(OPERATIONS_DIR)base_rotate.c \
 $(OPERATIONS_DIR)reverse_rotate.c \
 $(OPERATIONS_DIR)rotate.c \
@@ -25,7 +26,9 @@ $(SORTS_DIR)sort_five.c \
 $(SORTS_DIR)utils_sort.c \
 $(SORTS_DIR)radix_sort.c \
 $(SORTS_DIR)sort_four.c \
-$(SORTS_DIR)sort_two.c
+$(SORTS_DIR)sort_two.c \
+$(SORTS_DIR)sort_med.c 
+
 
 OBJS = $(SRCS:.c=.o)
 HEADER = push_swap.h

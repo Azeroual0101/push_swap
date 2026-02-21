@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sort_two.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/20 23:55:39 by abdazero          #+#    #+#             */
+/*   Updated: 2026/02/20 23:55:47 by abdazero         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../push_swap.h"
 
-void sort_two(t_node **a)
+void	sort_two(t_node **a)
 {
-    if (!*a || !(*a)->next)
-        return;
-    if((*a) -> value > (*a) -> next -> value)
-        ft_sa(a);
+	if (!*a || !(*a)->next)
+		return ;
+	if ((*a)->value > (*a)->next->value)
+		ft_sa(a);
 }

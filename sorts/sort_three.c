@@ -14,30 +14,29 @@
 
 void	sort_three(t_node **a)
 {
-    int first;
-    int second;
-    int third;
+	int	first;
+	int	second;
+	int	third;
 
-    if (!*a || !(*a)->next || !(*a)->next->next)
-		return;
-    first = (*a)-> value;
-    second = (*a)-> next -> value;
-    third = (*a)-> next -> next -> value;
-    if (first > second && second < third && first > third) 
-        ft_ra(a);
-    else if (first < second && second > third && first > third)
-        ft_rra(a);
-    else if (first > second && second > third)
-    {
-        ft_sa(a);
-        ft_rra(a);
-    }
-    else if (first > second && second < third)
-        ft_sa(a);
-    else if (first < second && second > third)
-    {
-        ft_sa(a);
-        ft_ra(a);
-    }
+	if (!*a || !(*a)->next || !(*a)->next->next)
+		return ;
+	first = (*a)->value;
+	second = (*a)->next->value;
+	third = (*a)->next->next->value;
+	if (first > second && second < third && first > third)
+		ft_ra(a);
+	else if (first < second && second > third && first > third)
+		ft_rra(a);
+	else if (first > second && second > third)
+	{
+		ft_sa(a);
+		ft_rra(a);
+	}
+	else if (first > second && second < third)
+		ft_sa(a);
+	else if (first < second && second > third)
+	{
+		ft_sa(a);
+		ft_ra(a);
+	}
 }
-

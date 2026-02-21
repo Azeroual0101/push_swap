@@ -1,8 +1,8 @@
 #include "push_swap.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
-// Fonction pour afficher la pile (pour debug)
 void print_stack(t_node *stack)
 {
     while (stack)
@@ -10,33 +10,35 @@ void print_stack(t_node *stack)
         printf("%d ", stack->value);
         stack = stack->next;
     }
+    printf("\n");
 }
 
 int main(int argc, char **argv)
 {
-    t_node *a = NULL;
-    t_node *b = NULL;
+    t_node *a;
+    t_node *b;
     int size;
+    if(argc < 2)
+        return (0);
 
-    // ===== PARSING =====
     a = pars_argmnts(argc, argv);
     
-    // Si erreur de parsing
     if (a == NULL)
     {
-        if (argc > 1)  // Évite d'afficher pour "aucun argument"
-            printf("Error\n");
+        if (argc > 1)
+            write(2, "Error\n", 6);
         return (1);
     }
     
-    // ===== TRI =====
+    if(is_sorted(a))
+    {
+        ft_free_stack(a);
+        return (0);
+    }
+    b = NULL;
     size = ft_size(&a);
     
-    if (size <= 1)
-    {
-        // Déjà trié, rien à faire
-    }
-    else if (size == 2)
+    if (size == 2)
         sort_two(&a);
     else if (size == 3)
         sort_three(&a);
@@ -44,16 +46,11 @@ int main(int argc, char **argv)
         sort_four(&a);
     else if (size == 5)
         sort_five(&a);
+    else if (size <= 20)
+        sort_med(&a);
     else
-    {
         radix_sort(&a);
-    }
     
-    // ===== AFFICHAGE POUR LE TESTEUR =====
-    // Le script tester.sh attend la liste des opérations
-    // ou rien si déjà trié
-    
-    // ===== LIBÉRATION =====
     ft_free_stack(a);
     ft_free_stack(b);
     
