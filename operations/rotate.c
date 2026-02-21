@@ -6,7 +6,7 @@
 /*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 23:02:55 by abdazero          #+#    #+#             */
-/*   Updated: 2026/02/20 22:16:34 by abdazero         ###   ########.fr       */
+/*   Updated: 2026/02/21 16:11:03 by abdazero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,7 @@ void	ft_rb(t_node **b)
 
 void	ft_rr(t_node **a, t_node **b)
 {
-	if (*a && (*a)->next)
-		ft_rstack(a);
-	if (*b && (*b)->next)
-		ft_rstack(b);
+	ft_rstack(a);
+	ft_rstack(b);
 	write(1, "rr\n", 3);
 }

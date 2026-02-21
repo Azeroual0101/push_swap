@@ -1,56 +1,49 @@
-#include "push_swap.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/21 15:55:46 by abdazero          #+#    #+#             */
+/*   Updated: 2026/02/21 16:00:41 by abdazero         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void print_stack(t_node *stack)
+#include "push_swap.h"
+
+static void	sort_stack(t_node **a)
 {
-    while (stack)
-    {
-        printf("%d ", stack->value);
-        stack = stack->next;
-    }
-    printf("\n");
+	int	size;
+
+	size = ft_size(a);
+	if (size == 2)
+		sort_two(a);
+	else if (size == 3)
+		sort_three(a);
+	else if (size == 4)
+		sort_four(a);
+	else if (size == 5)
+		sort_five(a);
+	else
+		radix_sort(a);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-    t_node *a;
-    t_node *b;
-    int size;
-    if(argc < 2)
-        return (0);
+	t_node	*a;
+	t_node	*b;
 
-    a = pars_argmnts(argc, argv);
-    
-    if (a == NULL)
-    {
-        if (argc > 1)
-            write(2, "Error\n", 6);
-        return (1);
-    }
-    
-    if(is_sorted(a))
-    {
-        ft_free_stack(a);
-        return (0);
-    }
-    b = NULL;
-    size = ft_size(&a);
-    
-    if (size == 2)
-        sort_two(&a);
-    else if (size == 3)
-        sort_three(&a);
-    else if (size == 4)
-        sort_four(&a);
-    else if (size == 5)
-        sort_five(&a);
-    else
-        radix_sort(&a);
-    
-    ft_free_stack(a);
-    ft_free_stack(b);
-    
-    return (0);
+	if (argc < 2)
+		return (0);
+	a = pars_argmnts(argc, argv);
+	if (!a)
+		return (write(2, "Error\n", 6), 1);
+	if (is_sorted(a))
+		return (ft_free_stack(a), 0);
+	b = NULL;
+	sort_stack(&a);
+	ft_free_stack(a);
+	ft_free_stack(b);
+	return (0);
 }
