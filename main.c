@@ -46,8 +46,6 @@ int main(int argc, char **argv)
         sort_four(&a);
     else if (size == 5)
         sort_five(&a);
-    else if (size <= 20)
-        sort_med(&a);
     else
         radix_sort(&a);
     
