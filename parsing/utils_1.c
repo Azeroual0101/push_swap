@@ -6,7 +6,7 @@
 /*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 23:03:30 by abdazero          #+#    #+#             */
-/*   Updated: 2026/02/20 23:45:57 by abdazero         ###   ########.fr       */
+/*   Updated: 2026/02/24 21:34:09 by abdazero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ long	ft_atol(char *morc)
 	while (morc[i] >= '0' && morc[i] <= '9')
 	{
 		res = res * 10 + (morc[i] - '0');
+		if (res > INT_MAX || res < INT_MIN)
+			return (res);
 		i++;
 	}
 	return (res * signe);

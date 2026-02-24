@@ -6,13 +6,13 @@
 /*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 00:13:36 by abdazero          #+#    #+#             */
-/*   Updated: 2026/02/20 23:58:15 by abdazero         ###   ########.fr       */
+/*   Updated: 2026/02/23 00:45:04 by abdazero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../push_swap.h"
 
-void	sort_tab(int *tab, int size)
+static void	sort_tab(int *tab, int size)
 {
 	int	i;
 	int	j;
@@ -48,7 +48,7 @@ int	is_sorted(t_node *stack)
 	return (1);
 }
 
-int	*index_stack(t_node **a)
+static int	*index_stack(t_node **a)
 {
 	int		size;
 	int		*tab;

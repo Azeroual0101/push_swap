@@ -6,13 +6,13 @@
 /*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 22:26:50 by abdazero          #+#    #+#             */
-/*   Updated: 2026/02/20 22:20:42 by abdazero         ###   ########.fr       */
+/*   Updated: 2026/02/22 23:50:04 by abdazero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../push_swap.h"
 
-void	ft_s(t_node **stack)
+static void	ft_s(t_node **stack)
 {
 	t_node	*b;
 	t_node	*temp;

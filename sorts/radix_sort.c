@@ -6,13 +6,13 @@
 /*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:48:41 by abdazero          #+#    #+#             */
-/*   Updated: 2026/02/21 00:31:44 by abdazero         ###   ########.fr       */
+/*   Updated: 2026/02/22 23:58:22 by abdazero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../push_swap.h"
 
-int	ft_max_bits(int size)
+static int	ft_max_bits(int size)
 {
 	int	bin_max;
 

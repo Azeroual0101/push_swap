@@ -6,11 +6,16 @@
 /*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 15:55:46 by abdazero          #+#    #+#             */
-/*   Updated: 2026/02/21 16:00:41 by abdazero         ###   ########.fr       */
+/*   Updated: 2026/02/22 23:47:33 by abdazero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+
+static void	print_error(void)
+{
+	write(2, "Error\n", 6);
+}
 
 static void	sort_stack(t_node **a)
 {
@@ -38,9 +43,15 @@ int	main(int argc, char **argv)
 		return (0);
 	a = pars_argmnts(argc, argv);
 	if (!a)
-		return (write(2, "Error\n", 6), 1);
+	{
+		print_error();
+		exit(1);
+	}
 	if (is_sorted(a))
-		return (ft_free_stack(a), 0);
+	{
+		ft_free_stack(a);
+		exit(0);
+	}
 	b = NULL;
 	sort_stack(&a);
 	ft_free_stack(a);
