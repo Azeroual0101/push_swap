@@ -6,37 +6,52 @@
 /*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/02 23:03:30 by abdazero          #+#    #+#             */
-/*   Updated: 2026/02/24 21:34:09 by abdazero         ###   ########.fr       */
+/*   Updated: 2026/02/26 01:13:36 by abdazero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../push_swap.h"
 
-long	ft_atol(char *morc)
+static long	parse_number(const char *str, int *i, int sign)
 {
+	long	result;
+	long	prev;
+
+	result = 0;
+	while (str[*i] >= '0' && str[*i] <= '9')
+	{
+		prev = result;
+		result = result * 10 + (str[*i] - '0');
+		if (result / 10 != prev)
+		{
+			if (sign == 1)
+				return (LONG_MAX);
+			else
+				return (LONG_MIN);
+		}
+		(*i)++;
+	}
+	return (result * sign);
+}
+
+long	ft_atol(const char *str)
+{
+	long	result;
+	int		sign;
 	int		i;
-	long	res;
-	int		signe;
 
 	i = 0;
-	signe = 1;
-	res = 0;
-	while (morc[i] == ' ' || (morc[i] >= 9 && morc[i] <= 13))
+	sign = 1;
+	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
 		i++;
-	if (morc[i] == '-' || morc[i] == '+')
+	if (str[i] == '-' || str[i] == '+')
 	{
-		if (morc[i] == '-')
-			signe = -1;
+		if (str[i] == '-')
+			sign = -1;
 		i++;
 	}
-	while (morc[i] >= '0' && morc[i] <= '9')
-	{
-		res = res * 10 + (morc[i] - '0');
-		if (res > INT_MAX || res < INT_MIN)
-			return (res);
-		i++;
-	}
-	return (res * signe);
+	result = parse_number(str, &i, sign);
+	return (result);
 }
 
 int	is_nbr(char *morc)

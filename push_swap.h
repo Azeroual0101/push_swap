@@ -6,7 +6,7 @@
 /*   By: abdazero <abdazero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/22 23:51:01 by abdazero          #+#    #+#             */
-/*   Updated: 2026/02/23 00:50:03 by abdazero         ###   ########.fr       */
+/*   Updated: 2026/02/26 01:22:01 by abdazero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int		add_to_stack(int nbr, t_node **stack);
 int		ft_size(t_node **a);
 void	ft_free_split(char **tab);
 void	ft_free_stack(t_node *stack);
-long	ft_atol(char *morc);
+long	ft_atol(const char *morc);
 int		is_nbr(char *morc);
 int		ft_atoi(const char *str);
 char	**ft_split(char const *s, char c);
